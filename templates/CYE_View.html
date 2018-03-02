@@ -1,0 +1,154 @@
+<div class="container-fluid">
+    <div class="card border-light mb-3">
+        <div class="header">
+            <h4 class="card-title">Criterios Y Estándares</h4>
+        </div>
+        <div class="body dataTables_wrapper form-inline dt-bootstrap">
+            <div class="row JustifyLeft">
+                <div class="col-sm-4">
+                    <button class="btn " style="width: 100%;background-color: #000033;color: white"
+                            data-toggle="modal" data-target="#modalAddRegister">
+                        Crear Nuevo Registro
+                    </button>
+                </div>
+                <div class="col-sm-6">
+                    <div id="filterTableDimensiones" class="dataTables_filter">
+                        <input type="search" class="form-control input-sm" style="width: 100%;"
+                               placeholder="Buscar" aria-controls="filterTableDimensiones">
+                    </div>
+                </div>
+            </div>
+            <!--TABLE-->
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Criterios y Estándares</th>
+                                <th>Componente Asociado</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in lista_criterios_y_estandares">
+                                <td>{{$index + 1}}</td>
+                                <td>{{item.Criterio}}</td>
+                                <td>{{item.Componente}}</td>
+                                <td>
+                                    <a ng-click="openEditModal(item)" style="color: blue">EDITAR</a> |
+                                    <a ng-click="deleteData(item.ID)" style="color: red">ELIMINAR</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="row">
+                <div class="col-sm-12" style="text-align: center">
+                    <div id="dataTableDimensionInfo" class="dataTables_info" role="status" aria-live="polite">
+                        Mostrando 4 - 10
+                    </div>
+                    <div id="dataTableDimensionPagination" class="dataTables_paginate pagine_simple_numbers">
+                        <ul class="pagination">
+                            <li id="dataTableDimensionBtnBack" class="paginate_button previous">
+                                <a aria-controls="dataTableDimensionBtnBack" data-dt-idx="0" tabindex="0">Anterior</a>
+                            </li>
+                            <li id="dataTableDimensionBtnNext" class="paginate_button next">
+                                <a aria-controls="dataTableDimensionBtnNext" data-dt-idx="0" tabindex="0">Siguiente</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--START MODAL ADD CYE-->
+<div class="container-fluid">
+    <div class="modal fade" id="modalAddRegister" tabindex="-1" role="dialog" aria-labelledby="modalAddRegister" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Crear Criterio y Estándar</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row clearfix">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label for="input_create_cye">Ingrese el nombre del criterio y estándar</label>
+                                <input type="text" class="form-control" ng-model="new_item.Criterio"
+                                       id="input_create_cye" placeholder="Nombre del Criterio y Estándar" >
+                            </div>
+
+                        </div>
+                        <div><hr></div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="select_componentes_disponibles">Componentes Disponibles</label>
+                                <select class="form-control" ng-model="new_item.Componente" id="select_componentes_disponibles">
+                                    <option ng-repeat="item in lista_componentes">{{item.Componente}}</option>
+                                </select>
+                                <p>Componente Seleccionado: <strong>{{new_item.Componente}}</strong></p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary"  ng-click="insertData(new_item)" id="button_save_cye">
+                        Agregar Criterio
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--END MODAL ADD CYE-->
+
+<!--START MODAL EDIT CYE-->
+<div class="container-fluid">
+    <div class="modal fade" id="modalEditCYE" tabindex="-1" role="dialog" aria-labelledby="modalEditYE" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Criterio y Estándar | {{component_selected_edit.Criterio}}</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row clearfix">
+                        <div class="col-md-12">
+                            <div class="container-fluid">
+                                <label for="input_edit_cye">Ingrese el nuevo nombre del criterio y estándar</label>
+                                <input type="text" class="form-control" ng-model="component_selected_edit.Criterio"
+                                       id="input_edit_cye" placeholder="Nombre Dimensión">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <br>
+                            <div class="col-sm-6">
+                                <label for="select_edit_componente">Componentes Disponibles</label>
+                                <select class="form-control" id="select_edit_componente" ng-model="component_selected_edit.Componente"
+                                        ng-change="update_ID_Criterio(component_selected_edit.Componente)">
+                                    <option ng-repeat="item in lista_componentes">{{item.Componente}}</option>
+                                </select>
+                                <p>Componente Asociado: {{component_selected_edit.Componente}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary"  ng-click="editData(component_selected_edit)" id="button_edit_cye">
+                        Guardar Cambios
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--END MODAL EDIT CYE-->
