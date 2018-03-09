@@ -117,7 +117,6 @@ angular.module("acreditacion")
            }
        };
        //Check if inputs of the edit modal are not empty
-       function edit_validation(item) { console.log(item);
            if(item.Dimension != "" && item.Componente != "") return true;
            else $.notify("Complete todos los campos primero!","info");
        }
