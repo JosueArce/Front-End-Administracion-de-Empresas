@@ -60,11 +60,11 @@ angular.module("acreditacion")
                     function() {
                         Http_Request.Http_Request(http_request,
                             {ID_Dimension : new_item.ID_Dimension,Componente : new_item.Componente},function (response) {
-                            if(response.data) {
+                            if(response.data.success) {
                                 getData();
-                                swal("Alerta","Registro insertado con éxito!","success");
+                                swal("Alerta",response.data.message,"success");
                             }
-                            else swal("Alerta","Error al insertar el registro!","error");
+                            else swal("Alerta",response.data.message,"error");
                         });
                     }
                 );
@@ -106,20 +106,21 @@ angular.module("acreditacion")
                        Http_Request.Http_Request(http_request,
                            {ID : new_item.ID_Componente, Componente : new_item.Componente, ID_Dimension : new_item.ID_Dimension},
                            function (response) {
-                           if(response.data) {
+                           if(response.data.success) {
                                getData(); //Refresh the information
-                               swal("Alerta","Registro editado con éxito!","success");
+                               swal("Alerta",response.data.message,"success");
                            }
-                           else swal("Alerta","Error al editar el registro!","error");
+                           else swal("Alerta",response.data.message,"error");
                        });
                    }
                );
            }
        };
        //Check if inputs of the edit modal are not empty
+        function edit_validation(item){
            if(item.Dimension != "" && item.Componente != "") return true;
            else $.notify("Complete todos los campos primero!","info");
-       }
+        }
        /*---------------------------END EDIT------------------------------------*/
 
        /*Start--------DELETE-- Description: remove an existing register from the data base-----*/
@@ -140,11 +141,11 @@ angular.module("acreditacion")
                },
                function() {
                    Http_Request.Http_Request(http_request,{ID:ID_Componente},function (response) {
-                        if(response.data){
+                        if(response.data.success){
                             delete_auxiliar(ID_Componente);
-                            swal("Alerta","Registro eliminado con éxito!","success");
+                            swal("Alerta",response.data.message,"success");
                         }
-                        else swal("Alerta","Error al eliminar el registro!","error");
+                        else swal("Alerta",response.data.message,"error");
                    });
 
                }
@@ -168,14 +169,13 @@ angular.module("acreditacion")
             setTimeout(function () {
                 $scope.$apply(function () {
                     Http_Request.Http_Request(http_request,{},function (response){
-                        if(response.data != null)$scope.lista_dimensiones = response.data;
-                        else $.notify("Error al obtener las dimensiones!","error");
+                        if(response.data.success)$scope.lista_dimensiones = response.data.data;
+                        else $.notify("Error!",response.data.message,"error");
                     });
                     http_request.endPoint = "selectComponentes";
                     Http_Request.Http_Request(http_request,{},function (response) {
-                        console.log(response.data);
-                        if(response.data != null)$scope.lista_componentes = response.data;
-                        else $.notify("Error al obtener los componentes!","error");
+                        if(response.data.success)$scope.lista_componentes = response.data.data;
+                        else $.notify("Error!",response.data.message,"error");
                     });
                 });
             }, 250);

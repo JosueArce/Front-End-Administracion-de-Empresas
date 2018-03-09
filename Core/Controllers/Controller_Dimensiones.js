@@ -50,11 +50,11 @@ angular.module("acreditacion")
                     },
                     function() {
                         Http_Request.Http_Request(http_request,new_item,function (response) {
-                            if(response.data) {
+                            if(response.data.success) {
                                 getData();
-                                swal("Alerta","Registro insertado con éxito!","success");
+                                swal("Alerta!",response.data.message,"success");
                             }
-                            else swal("Alerta","Error al insertar el registro!","error");
+                            else swal("Alerta",esponse.data.message,"error");
                         });
                     }
                 );
@@ -89,11 +89,11 @@ angular.module("acreditacion")
                     },
                     function() {
                         Http_Request.Http_Request(http_request,new_item,function (response) {
-                            if(response.data) {
+                            if(response.data.success) {
                                 getData();
-                                swal("Alerta","Registro editado con éxito!","success");
+                                swal("Alerta",response.data.message,"success");
                             }
-                            else swal("Alerta","Error al editar el registro!","error");
+                            else swal("Alerta",response.data.message,"error");
                         });
                     }
                 );
@@ -119,11 +119,11 @@ angular.module("acreditacion")
                 },
                 function() {
                     Http_Request.Http_Request(http_request,{ID:ID_Dimension},function (response) {
-                        if(response.data){
+                        if(response.data.success){
                             delete_auxiliar(ID_Dimension);
-                            swal("Alerta","Registro eliminado con éxito!","success");
+                            swal("Alerta",response.data.message,"success");
                         }
-                        else swal("Alerta","Error al eliminar el registro!","error");
+                        else swal("Alerta",response.data.message,"error");
                     });
                 }
             );
@@ -145,8 +145,8 @@ angular.module("acreditacion")
             setTimeout(function () {
                 $scope.$apply(function () {
                     Http_Request.Http_Request(http_request,{},function (response) {
-                        if(response.data != null)$scope.lista_dimensiones = response.data;
-                        else $.notify("Error al obtener los registros!","error")
+                        if(response.data.success)$scope.lista_dimensiones = response.data.data;
+                        else $.notify("Error!",response.data.message,"error")
                     });
                 });
             }, 250);

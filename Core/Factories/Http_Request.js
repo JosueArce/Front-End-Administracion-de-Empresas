@@ -4,7 +4,7 @@ angular.module("acreditacion")
             Http_Request : function (http,params,callback) {
                 $http({
                     method : http.method,
-                    url : "http://172.24.40.244:8080/" + http.endPoint,
+                    url : "http://172.24.67.1:8080/" + http.endPoint,
                     data : params
                 }).then(function successCallback(response) {
                     callback(response);

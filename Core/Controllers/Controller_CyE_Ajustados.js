@@ -16,7 +16,9 @@ angular.module("acreditacion")
                 Valoracion : "Deficiente",
                 Responsable : "Responsable 1",
                 Correo: "Correo 1",
-                FLOC : new Date()
+                FLOC : new Date(),
+                FLA : new Date(),
+                IncorporadoIAE : "IAE 1"
             },
             {
                 ID : "C_A 2",
@@ -26,7 +28,9 @@ angular.module("acreditacion")
                 Valoracion : "Excelente",
                 Responsable : "Responsable 2",
                 Correo: "Correo 2",
-                FLOC : new Date()
+                FLOC : new Date(),
+                FLA : new Date(),
+                IncorporadoIAE : "IAE 2"
             },
             {
                 ID : "C_A 3",
@@ -36,13 +40,21 @@ angular.module("acreditacion")
                 Valoracion : "Regular",
                 Responsable : "Responsable 3",
                 Correo: "Correo 3",
-                FLOC : new Date()
+                FLOC : new Date(),
+                FLA : new Date(),
+                IncorporadoIAE : "IAE 3"
             }
         ];
         $scope.lista_responsables = [
             {Responsable : "Responsable 1",Correo: "Correo 1"},
             {Responsable : "Responsable 2",Correo : "Correo 2"},
-            {Responsable : "Responsable 3", Correo: "Correo 3"}];
+            {Responsable : "Responsable 3", Correo: "Correo 3"},
+            {Responsable : "Responsable 4", Correo: "Correo 3"},
+            {Responsable : "Responsable 5", Correo: "Correo 3"},
+            {Responsable : "Responsable 6", Correo: "Correo 3"},
+            {Responsable : "Responsable 7", Correo: "Correo 3"},
+            {Responsable : "Responsable 8", Correo: "Correo 3"},
+            {Responsable : "Responsable 9", Correo: "Correo 3"}];
         $scope.lista_valoraciones = [{Valoracion : "Deficiente"},{Valoracion : "Regular"},{Valoracion : "Bien"},{Valoracion : "Excelente"}];
         /*---------------------------------------END Listas---------------------------------------------------------*/
 
@@ -59,7 +71,9 @@ angular.module("acreditacion")
             Valoracion : "",
             Responsable : "",
             Correo : "",
-            FLOC : ""
+            FLOC : "",
+            FLA : "",
+            IncorporadoIAE : ""
         };
         /*----------END INSERT----------------*/
 
@@ -72,7 +86,9 @@ angular.module("acreditacion")
           Valoracion : "",
           Responsable : "",
           Correo: "",
-          FLOC : ""
+          FLOC : "",
+          FLA : "",
+          IncorporadoIAE : ""
         };
         /*----------END EDIT----------------*/
         /*--------------------------END Variables---------------------------------------------*/
@@ -87,7 +103,7 @@ angular.module("acreditacion")
         /*Start------INSERT-- Description: send a new item to the endPoint insertComponente-----*/
         $scope.insertData = function (new_item) {
             http_request.method = "POST";
-            http_request.endPoint = "";
+            http_request.endPoint = "insertCYEA";
             if(insert_validation(new_item)){
                 swal({
                         title: "Alerta",
@@ -104,13 +120,14 @@ angular.module("acreditacion")
                     function() {
                         Http_Request.Http_Request(http_request,
                             {Criterio : new_item.Criterio, CriterioAjustado : new_item.CriterioAjustado, Observacion : new_item.Observacion,
-                             Valoracion : new_item.Valoracion, Responsable : new_item.Responsable, Correo: new_item.Correo, FLOC: new_item.FLOC},
+                             Valoracion : new_item.Valoracion, Responsable : new_item.Responsable, Correo: new_item.Correo, FLOC: new_item.FLOC,
+                             FLA : new_item.FLA, IncorporadoIAE : new_item.IncorporadoIAE},
                             function (response) {
-                                if(response.data) {
+                                if(response.data.success) {
                                     getData();
-                                    swal("Alerta","Registro insertado con éxito!","success");
+                                    swal("Alerta",response.data.message,"success");
                                 }
-                                else swal("Alerta","Error al insertar el registro!","error");
+                                else swal("Alerta",response.data.message,"error");
                             });
                     }
                 );
@@ -136,7 +153,7 @@ angular.module("acreditacion")
         };
         $scope.editData = function (new_item) {
             http_request.method = "POST";
-            http_request.endPoint = "";
+            http_request.endPoint = "editCYEA";
             if(edit_validation(new_item)){
                 swal({
                         title: "Alerta",
@@ -156,11 +173,11 @@ angular.module("acreditacion")
                                 Observacion : new_item.Observaciones,Valoracion : new_item.Valoracion, Responsable : new_item.Responsable,
                                 Correo : new_item.Correo, FLOC : new_item.FLOC},
                             function (response) {
-                                if(response.data) {
+                                if(response.data.success) {
                                     getData(); //Refresh the information
-                                    swal("Alerta","Registro editado con éxito!","success");
+                                    swal("Alerta",response.data.message,"success");
                                 }
-                                else swal("Alerta","Error al editar el registro!","error");
+                                else swal("Alerta",response.data.message,"error");
                             });
                     }
                 );
@@ -174,7 +191,7 @@ angular.module("acreditacion")
         /*Start--------DELETE-- Description: remove an existing register from the data base-----*/
         $scope.deleteData = function (ID_CYA) {
             http_request.method = "POST";
-            http_request.endPoint = "";
+            http_request.endPoint = "deleteCYEA";
             swal({
                     title: "Alerta",
                     text: "Seguro que desea eliminar? ",
@@ -189,11 +206,11 @@ angular.module("acreditacion")
                 },
                 function() {
                     Http_Request.Http_Request(http_request,{ID:ID_CYA},function (response) {
-                        if(response.data){
+                        if(response.data.success){
                             delete_auxiliar(ID_Componente);
-                            swal("Alerta","Registro eliminado con éxito!","success");
+                            swal("Alerta",response.data.message,"success");
                         }
-                        else swal("Alerta","Error al eliminar el registro!","error");
+                        else swal("Alerta",response.data.message,"error");
                     });
 
                 }
@@ -213,12 +230,12 @@ angular.module("acreditacion")
         //Obtains the information from the endPoint selectDimensiones and selectComponentes
         function getData() {
             http_request.method = "GET";
-            http_request.endPoint = "";
+            http_request.endPoint = "selectCYEA";
             setTimeout(function () {
                 $scope.$apply(function () {
-                    Http_Request.Http_Request(http_request,{},function (response){
-                        if(response.data != null)$scope.lista_dimensiones = response.data;
-                        else $.notify("Error al obtener las dimensiones!","error");
+                    Http_Request.Http_Request(http_request,{},function (response){ console.log(response.data.data);
+                        if(response.data.success)$scope.lista_dimensiones = response.data.data;
+                        else $.notify("Error!",response.data.message,"error");
                     });
                 });
             }, 250);

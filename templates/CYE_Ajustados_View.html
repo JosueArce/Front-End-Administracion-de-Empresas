@@ -36,7 +36,9 @@
                                 <th>Observación</th>
                                 <th>Valoración</th>
                                 <th>Responsables - Correo</th>
-                                <th>Fecha Límite</th>
+                                <th>FLOC</th>
+                                <th>FLA</th>
+                                <th>Incorporado IAE</th>
                                 <th>Acción</th>
                             </tr>
                             </thead>
@@ -49,6 +51,8 @@
                                 <td>{{item.Valoracion}}</td>
                                 <td>{{item.Responsable}} - {{item.Correo}}</td>
                                 <td>{{item.FLOC}}</td>
+                                <td>{{item.FLA}}</td>
+                                <td>{{item.IncorporadoIAE}}</td>
                                 <td>
                                     <a ng-click="openModalEdit(item)"  style="color: darkblue">EDITAR</a> |
                                     <a  ng-click="deleteData(item.ID)" style="color: red;">ELIMINAR</a>
@@ -78,38 +82,51 @@
                 <div class="modal-body">
                     <div class="row clearfix">
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <label for="select_cye_available">Criterios y Estándares</label>
                                 <select class="form-control" id="select_cye_available"
                                         ng-model="new_item.Criterio" ng-options="item.Criterio for item in lista_cye">
                                 </select>
                             </div>
-                            <div class="col-sm-6 ">
-                                <label for="input_cye_ajustado">Criterio y Estándar Ajustado</label>
+                            <div class="col-sm-4 ">
+                                <label for="input_cye_ajustado">CYE Ajustado</label>
                                 <input type="text" class="form-control input-sm" id="input_cye_ajustado" ng-model="new_item.CriterioAjustado">
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <label for="select_available_responsables">Responsable</label>
-                                <select class="form-control" id="select_available_responsables"
-                                        ng-model="new_item.Responsable" ng-options="item.Responsable for item in lista_responsables">
-                                </select>
-                            </div>
-                            <div class="col-sm-6">
-                                <label for="date_fecha_limite">Fecha Limite</label>
-                                <input class="form-control" type="date" id="date_fecha_limite" ng-model="new_item.FLOC">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <label for="input_observaciones">Observación</label>
                                 <input type="text" class="form-control" ng-model="new_item.Observacion" id="input_observaciones">
                             </div>
-                            <div class="col-sm-6">
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label for="date_FLOC">FLOC</label>
+                                <input class="form-control" type="date" id="date_FLOC" ng-model="new_item.FLOC">
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="date_FLA">FLA</label>
+                                <input class="form-control" type="date" id="date_FLA" ng-model="new_item.FLA">
+                            </div>
+                            <div class="col-sm-4">
                                 <label for="input_valoracion">Valoración</label>
                                 <select class="form-control" id="input_valoracion" ng-model="new_item.Valoracion"
                                         ng-options="item.Valoracion for item in lista_valoraciones">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <br>
+                            <div class="col-sm-6">
+                                <select id="select_available_responsables" class="ms" multiple="multiple" style="width: 100%">
+                                    <optgroup label="Responsables Disponibles">
+                                        <option ng-repeat="item in lista_responsables">{{item.Responsable}}</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <select id="selected_responsables" class="ms" multiple="multiple" style="width: 100%">
+                                    <optgroup label="Responsables Seleccionados">
+                                        <option ng-repeat="item in lista_responsables_seleccionados">{{item.Responsable}}</option>
+                                    </optgroup>
                                 </select>
                             </div>
                         </div>
