@@ -6,56 +6,22 @@ angular.module("acreditacion")
     .controller("CYE_Ajustados",function ($scope,Http_Request) {
 
         /*Start --------------------------------- Listas-----------------------------------------*/
-        $scope.lista_cye = [{ID : "C1",Criterio : "Criterio 1"},{ID : "C2",Criterio : "Criterio 2"},{ID : "C3",Criterio :"Criterio 3"}];
-        $scope.lista_cye_ajustados = [
-            {
-                ID : "C_A 1",
-                Criterio : "Criterio 1",
-                CriterioAjustado: "C Y A 1",
-                Observacion : "Observacion 1",
-                Valoracion : "Deficiente",
-                Responsable : "Responsable 1",
-                Correo: "Correo 1",
-                FLOC : new Date(),
-                FLA : new Date(),
-                IncorporadoIAE : "IAE 1"
-            },
-            {
-                ID : "C_A 2",
-                Criterio : "Criterio 2",
-                CriterioAjustado: "C Y A 2",
-                Observacion : "Observacion 2",
-                Valoracion : "Excelente",
-                Responsable : "Responsable 2",
-                Correo: "Correo 2",
-                FLOC : new Date(),
-                FLA : new Date(),
-                IncorporadoIAE : "IAE 2"
-            },
-            {
-                ID : "C_A 3",
-                Criterio : "Criterio 3",
-                CriterioAjustado: "C Y A 3",
-                Observacion : "Observacion 3",
-                Valoracion : "Regular",
-                Responsable : "Responsable 3",
-                Correo: "Correo 3",
-                FLOC : new Date(),
-                FLA : new Date(),
-                IncorporadoIAE : "IAE 3"
-            }
-        ];
+        $scope.lista_cye = [];
+        $scope.lista_cye_ajustados = [];
         $scope.lista_responsables = [
-            {Responsable : "Responsable 1",Correo: "Correo 1"},
-            {Responsable : "Responsable 2",Correo : "Correo 2"},
-            {Responsable : "Responsable 3", Correo: "Correo 3"},
-            {Responsable : "Responsable 4", Correo: "Correo 3"},
-            {Responsable : "Responsable 5", Correo: "Correo 3"},
-            {Responsable : "Responsable 6", Correo: "Correo 3"},
-            {Responsable : "Responsable 7", Correo: "Correo 3"},
-            {Responsable : "Responsable 8", Correo: "Correo 3"},
-            {Responsable : "Responsable 9", Correo: "Correo 3"}];
-        $scope.lista_valoraciones = [{Valoracion : "Deficiente"},{Valoracion : "Regular"},{Valoracion : "Bien"},{Valoracion : "Excelente"}];
+            {ID: "1",Responsable : "Responsable 1",Correo: "Correo 1"},
+            {ID: "2",Responsable : "Responsable 2",Correo : "Correo 2"},
+            {ID: "3",Responsable : "Responsable 3", Correo: "Correo 3"},
+            {ID: "4",Responsable : "Responsable 4", Correo: "Correo 4"},
+            {ID: "5",Responsable : "Responsable 5", Correo: "Correo 5"},
+            {ID: "6",Responsable : "Responsable 6", Correo: "Correo 6"},
+            {ID: "7",Responsable : "Responsable 7", Correo: "Correo 7"},
+            {ID: "8",Responsable : "Responsable 8", Correo: "Correo 8"},
+            {ID: "9",Responsable : "Responsable 9", Correo: "Correo 9"}];
+        $scope.lista_responsables_seleccionados = [];
+        $scope.lista_valoraciones = [];
+        $scope.lista_nivel_IAE = [];
+
         /*---------------------------------------END Listas---------------------------------------------------------*/
 
         /*Start -------------------------------- Variables--------------------------------------------------*/
@@ -65,14 +31,18 @@ angular.module("acreditacion")
         };
         /*-----------INSERT-------------*/
         $scope.new_item ={
+            ID_CYE : "",
             Criterio : "",
             CriterioAjustado : "",
-            Observacion : "",
+            Observaciones : "",
+            ID_Valoracion : "",
             Valoracion : "",
+            ID_Responsable : "",
             Responsable : "",
-            Correo : "",
             FLOC : "",
             FLA : "",
+            ID_NivelIAE : "",
+            NivelIAE : "",
             IncorporadoIAE : ""
         };
         /*----------END INSERT----------------*/
@@ -80,12 +50,12 @@ angular.module("acreditacion")
         /*-----------EDIT---------------*/
         $scope.cye_selected_edit = {
           ID: "",
-          Criterio : "",
+          ID_CYE : "",
           CriterioAjustado : "",
           Observaciones : "",
-          Valoracion : "",
-          Responsable : "",
-          Correo: "",
+          ID_Valoracion : "",
+          ID_Responsable : "",
+          ID_NivelIAE : "",
           FLOC : "",
           FLA : "",
           IncorporadoIAE : ""
@@ -233,13 +203,93 @@ angular.module("acreditacion")
             http_request.endPoint = "selectCYEA";
             setTimeout(function () {
                 $scope.$apply(function () {
-                    Http_Request.Http_Request(http_request,{},function (response){ console.log(response.data.data);
-                        if(response.data.success)$scope.lista_dimensiones = response.data.data;
+
+                    //Obtains the intel from DB about CYE_Ajustados
+                    Http_Request.Http_Request(http_request,{},function (response){
+                        if(response.data.success)$scope.lista_cye_ajustados = response.data.data;
                         else $.notify("Error!",response.data.message,"error");
                     });
+
+                    //Gets the data from DB about CYE
+                    http_request.endPoint = "selectCYE";
+                    Http_Request.Http_Request(http_request,{},function (response) {
+                        if(response.data.success)$scope.lista_cye = response.data.data;
+                        else $.notify("Error!",response.data.message,"error");
+                    });
+
+                    //Gets data from DB related with nivel IAE
+                    http_request.endPoint = "selectNivelIAE";
+                    Http_Request.Http_Request(http_request,{},function (response) {console.log("NivelIAE: "+JSON.stringify(response.data.data));
+                        if(response.data.success)$scope.lista_nivel_IAE = response.data.data;
+                        else $.notify("Error!",response.data.message,"error");
+                    });
+
+                    //Obtains the information of valoraciones from DB
+                    http_request.endPoint = "selectValoracion";
+                    Http_Request.Http_Request(http_request,{},function (response) {console.log("VALORACIONES: "+JSON.stringify(response.data.data));
+                        if(response.data.success)$scope.lista_valoraciones = response.data.data;
+                        else $.notify("Error!",response.data.message,"error");
+                    });
+
                 });
             }, 250);
         }
+
+        //Update ID's on change select item
+        $scope.updateIDCriterio = function (Criterio) {
+            for(item in $scope.lista_cye){
+                if($scope.lista_cye[item].CYE == Criterio){
+                    $scope.new_item.ID_CYE = $scope.lista_cye[item].ID_CYE;
+                    $scope.cye_selected_edit.ID_CYE = $scope.lista_cye[item].ID_CYE;
+                    return;
+                }
+            }
+        };
+        $scope.updateIDvaloracion = function (Valoracion) {
+          for(item in $scope.lista_valoraciones){
+              if($scope.lista_valoraciones[item].Valoracion == Valoracion){
+                $scope.new_item.ID_Valoracion == $scope.lista_valoraciones[item].ID;
+                $scope.cye_selected_edit.ID = $scope.lista_valoraciones[item].ID;
+                return;
+              }
+          }
+        };
+        $scope.updateIDNivelIAE = function (NivelIAE) {
+            for(item in $scope.lista_nivel_IAE){
+                if($scope.lista_nivel_IAE[item].Nivel == NivelIAE){
+                    $scope.new_item.ID_NivelIAE = $scope.lista_nivel_IAE[item].ID;
+                    $scope.cye_selected_edit.ID_NivelIAE = $scope.lista_nivel_IAE[item].ID;
+                    return;
+                }
+            }
+        };
+
+        //selected responsable
+        $scope.addResponsable = function (new_responsable) {console.log(new_responsable);
+            for(item in $scope.lista_responsables){
+                if($scope.lista_responsables[item].Responsable == new_responsable && !existResponsable(new_responsable)){
+                    $scope.lista_responsables_seleccionados.push($scope.lista_responsables[item]);
+                    return;
+                }
+            }
+        };
+        //Verify if the responsable is not already selected
+        function existResponsable(Responsable) {
+            for(item in $scope.lista_responsables_seleccionados){
+                if($scope.lista_responsables_seleccionados[item].Responsable == Responsable)return true;
+            }
+            return false;
+        }
+        //removed responsable
+        $scope.removeResponsable = function (responsable) {
+            for(item in $scope.lista_responsables_seleccionados){
+                if($scope.lista_responsables_seleccionados[item].Responsable == responsable)
+                {
+                    $scope.lista_responsables_seleccionados.splice(item,1);
+                    return;
+                }
+            }
+        };
         /*---------------------------END Aux Methods-----------------------------*/
 
         /*----------------------------END Methods -------------------------------*/
