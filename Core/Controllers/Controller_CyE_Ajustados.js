@@ -7,7 +7,22 @@ angular.module("acreditacion")
 
         /*Start --------------------------------- Listas-----------------------------------------*/
         $scope.lista_cye = [];
-        $scope.lista_cye_ajustados = [];
+        $scope.lista_cye_ajustados = [
+            {
+                ID : "CYE1",
+                CYE : "C1",
+                ID_CYA : "CYA1",
+                CriterioAjustado : "CA1",
+                Observaciones : "Observacion",
+                Valoracion : "Valoracion 1",
+                Responsable : "Responsable 1",
+                Correo : "Correo 1",
+                FLOC : new Date(),
+                FLA : new Date(),
+                IncorporadoIAE : "SI",
+                NivelIAE : "Bien"
+            }
+        ];
         $scope.lista_responsables = [
             {ID: "1",Responsable : "Responsable 1",Correo: "Correo 1"},
             {ID: "2",Responsable : "Responsable 2",Correo : "Correo 2"},
@@ -51,11 +66,15 @@ angular.module("acreditacion")
         $scope.cye_selected_edit = {
           ID: "",
           ID_CYE : "",
+          Criterio : "",
           CriterioAjustado : "",
           Observaciones : "",
           ID_Valoracion : "",
+          Valoracion : "",
           ID_Responsable : "",
+          Responsable : "",
           ID_NivelIAE : "",
+          NivelIAE : "",
           FLOC : "",
           FLA : "",
           IncorporadoIAE : ""
@@ -110,16 +129,20 @@ angular.module("acreditacion")
 
         /*Start---------EDIT-- Description: edits the information of an existing register---*/
         //Opens the modal and loads the selected information
-        $scope.openEditModal = function(item){
+        $scope.openEditModal = function(item){ console.log(item);
             $scope.cye_selected_edit.ID = item.ID;
-            $scope.cye_selected_edit.Criterio = item.Criterio;
+            $scope.cye_selected_edit.Criterio = item.CYE;
             $scope.cye_selected_edit.CriterioAjustado = item.CriterioAjustado;
-            $scope.cye_selected_edit.Observaciones = item.Observacion;
+            $scope.cye_selected_edit.Observaciones = item.Observaciones;
             $scope.cye_selected_edit.Valoracion = item.Valoracion;
             $scope.cye_selected_edit.Responsable = item.Responsable;
             $scope.cye_selected_edit.Correo = item.Correo;
             $scope.cye_selected_edit.FLOC = item.FLOC;
+            $scope.cye_selected_edit.FLA = item.FLA;
+            $scope.cye_selected_edit.NivelIAE = item.NivelIAE;
+            $scope.cye_selected_edit.IncorporadoIAE = item.IncorporadoIAE;
             $("#modalEditCYEA").modal("show");
+            console.log("Nuevo : "+ JSON.stringify($scope.cye_selected_edit));
         };
         $scope.editData = function (new_item) {
             http_request.method = "POST";
@@ -200,11 +223,11 @@ angular.module("acreditacion")
         //Obtains the information from the endPoint selectDimensiones and selectComponentes
         function getData() {
             http_request.method = "GET";
-            http_request.endPoint = "selectCYEA";
             setTimeout(function () {
                 $scope.$apply(function () {
 
                     //Obtains the intel from DB about CYE_Ajustados
+                    http_request.endPoint = "selectCYEA";
                     Http_Request.Http_Request(http_request,{},function (response){
                         if(response.data.success)$scope.lista_cye_ajustados = response.data.data;
                         else $.notify("Error!",response.data.message,"error");
@@ -266,9 +289,10 @@ angular.module("acreditacion")
 
         //selected responsable
         $scope.addResponsable = function (new_responsable) {console.log(new_responsable);
-            for(item in $scope.lista_responsables){
+            for(var item = 0; item < $scope.lista_responsables.length;item++){
                 if($scope.lista_responsables[item].Responsable == new_responsable && !existResponsable(new_responsable)){
                     $scope.lista_responsables_seleccionados.push($scope.lista_responsables[item]);
+                    console.log($scope.lista_responsables_seleccionados);
                     return;
                 }
             }
@@ -280,7 +304,7 @@ angular.module("acreditacion")
             }
             return false;
         }
-        //removed responsable
+        //Removed responsable
         $scope.removeResponsable = function (responsable) {
             for(item in $scope.lista_responsables_seleccionados){
                 if($scope.lista_responsables_seleccionados[item].Responsable == responsable)

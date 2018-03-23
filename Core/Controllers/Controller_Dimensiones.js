@@ -50,6 +50,7 @@ angular.module("acreditacion")
                     },
                     function() {
                         Http_Request.Http_Request(http_request,new_item,function (response) {
+                            console.log(response);
                             if(response.data.success) {
                                 getData();
                                 swal("Alerta!",response.data.message,"success");
@@ -73,7 +74,7 @@ angular.module("acreditacion")
         };
         $scope.editData = function (new_item) {
             if(input_validation(new_item)){
-                http_request.method = "POST";
+                http_request.method = "PUT";
                 http_request.endPoint = "editDimension";
                 swal({
                         title: "Alerta",
@@ -103,7 +104,7 @@ angular.module("acreditacion")
 
         /*Start---------DELETE--Description: Remove an existing register located at the data base------*/
         $scope.deleteData = function (ID_Dimension) {
-                http_request.method = "POST";
+                http_request.method = "DELETE";
                 http_request.endPoint = "deleteDimension";
             swal({
                     title: "Alerta",

@@ -168,7 +168,7 @@ angular.module("acreditacion")
            http_request.endPoint = "selectDimensiones";
             setTimeout(function () {
                 $scope.$apply(function () {
-                    Http_Request.Http_Request(http_request,{},function (response){
+                    Http_Request.Http_Request(http_request,{},function (response){ console.log(response);
                         if(response.data.success)$scope.lista_dimensiones = response.data.data;
                         else $.notify("Error!",response.data.message,"error");
                     });
@@ -182,13 +182,11 @@ angular.module("acreditacion")
        }
        //Update the ID Dimension every time the select dimension changes on the ADD REGISTER MODAL and EDIT REGISTER MODAL
        $scope.update_ID_Dimension = function (Dimension) {
-           for(item in $scope.lista_dimensiones){ debugger;
+           for(item in $scope.lista_dimensiones){
                if($scope.lista_dimensiones[item].Dimension == Dimension){
                    $scope.new_item.ID_Dimension = $scope.lista_dimensiones[item].ID;
                }
-
            }
-           console.log($scope.new_item)
        };
        /*---------------------------END Aux Methods-----------------------------*/
 
